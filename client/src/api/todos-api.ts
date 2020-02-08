@@ -70,5 +70,6 @@ export async function getUploadUrl(
 
 export async function uploadFile(uploadUrl: string, file: Buffer): Promise<void> {
 	//const options = { headers: { 'Content-Type': fileType, 'x-amz-acl': 'public-read' } }
-  	await Axios.put(uploadUrl, file)
+	  const res = await Axios.put(uploadUrl, file)
+	  console.log(res);
 }

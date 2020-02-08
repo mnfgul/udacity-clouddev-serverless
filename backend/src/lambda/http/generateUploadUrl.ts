@@ -8,7 +8,7 @@ import { setAttachmentUrl } from '../../businessLogic/todos';
 
 const XAWS = AWSXRay.captureAWS(AWS);
 const S3 = new XAWS.S3({
-	ignatureVersion: 'v4'
+	signatureVersion: 'v4'
 });
 const bucketName = process.env.IMAGES_S3_BUCKET;
 const urlExpiration = process.env.SIGNED_URL_EXPIRATION;

@@ -42,17 +42,17 @@ export class TodoAccess {
 	/**
 	 * Delete ToDo item function
 	 */
-	public async deleteTodo(todoId: string, userId: string): Promise<TodoItem[]> {
+	public async deleteTodo(todoId: string, createdAt: string): Promise<TodoItem[]> {
 		//logging opreation
 		const logger = createLogger('delete-todo')
 		logger.info('Deleting ToDo item')
 		
 		//delete operation
-		this.docClient
+		await this.docClient
 			.delete({
 				TableName: this.todosTable,
 				Key: {
-					todoId: todoId, userId: userId
+					todoId, createdAt
 				},
 			})
 			.promise();
@@ -69,7 +69,7 @@ export class TodoAccess {
 		logger.info('Getting all ToDo items for current user ')
 		
 		const result = await this.docClient
-			.scan({
+			.query({
 				TableName: this.todosTable,
 				FilterExpression: 'userId = :userId',
                 ExpressionAttributeValues: {
@@ -115,7 +115,7 @@ export class TodoAccess {
 		const logger = createLogger('update-todo')
 		logger.info('Updating a ToDo item ', { ...todoUpdate })
 
-		await this.docClient
+		const updatedItem = await this.docClient
 			.update({
 				TableName: this.todosTable,
 				Key: { todoId, createdAt },
@@ -132,6 +132,8 @@ export class TodoAccess {
 			})
 			.promise()
 
+		logger.info('Updated Item:', updatedItem)
+
     }
 
     public async setAttachmentUrl(
@@ -139,7 +141,11 @@ export class TodoAccess {
         createdAt: string,
         attachmentUrl: string,
     ): Promise<void> {
-        this.docClient
+		
+		const logger = createLogger('update-todo')
+		logger.info('Updating ToDo item attachment ul', { attachmentUrl })
+
+        await this.docClient
             .update({
                 TableName: this.todosTable,
                 Key: {

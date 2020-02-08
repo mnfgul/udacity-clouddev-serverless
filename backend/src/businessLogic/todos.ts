@@ -35,9 +35,8 @@ export async function deleteTodo(
 	jwtToken: string,
 ): Promise<void> {
 	const userId = parseUserId(jwtToken);
-	//const todo = await todoAccess.getTodo(todoId, userId);
-	//todoAccess.deleteTodo(todo.todoId, todo.createdAt);
-	todoAccess.deleteTodo(todoId, userId);
+	const todo = await todoAccess.getTodo(todoId, userId);
+	todoAccess.deleteTodo(todoId, todo.createdAt);
 }
 
 export async function updateTodo(
@@ -46,8 +45,7 @@ export async function updateTodo(
     jwtToken: string,
 ): Promise<void> {
     const userId = parseUserId(jwtToken);
-    const todo = await todoAccess.getTodo(todoId, userId);
-
+    const todo = await todoAccess.getTodo(todoId, userId)
     todoAccess.updateTodo(todo.todoId, todo.createdAt, updateTodoRequest);
 }
 
